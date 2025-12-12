@@ -17,6 +17,9 @@
 
 {% macro get_config_var(var_name) %}
   {% set default_config = elementary.get_default_config() %}
+  {% if model is defined and model.config is mapping %}
+    {% do default_config.update(model.config.get("meta", {}).get("elementary", {})) %}
+  {% endif %}
   {% set var_value = var(var_name, default_config.get(var_name)) %}
   {% if var_value is string %}
     {% if var_value.lower() == "true" %}
